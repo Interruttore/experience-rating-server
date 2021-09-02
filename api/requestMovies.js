@@ -4,13 +4,16 @@ const genreUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${config
 const baseUrl = `https://api.themoviedb.org/3/search/movie?api_key=${config.TMDB_API}&`;
 
 exports.getMovies = async function (query) {
+  console.log(query);
   const moviesResults = [];
+  console.log("Requesting genres");
   const genres = await makeRequest(genreUrl).
     then((res) => res.data).
     catch((err) => {
       console.log(err);
       throw err;
     });
+  console.log("Requesting movie");
   const data = await makeRequest(baseUrl, query).
     then((res) => res.data).
     catch((err) => {
