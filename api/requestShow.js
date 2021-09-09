@@ -4,22 +4,28 @@ const genreUrl = `https://api.themoviedb.org/3/genre/tv/list?api_key=${config.TM
 const baseUrl = `https://api.themoviedb.org/3/search/tv?api_key=${config.TMDB_API}&`;
 
 exports.getShows = async function (query) {
-  const showResults = [];
+  let key = 0;
+  const showsResults = [];
+
+  console.log("Requesting genres");
   const genres = await makeRequest(genreUrl).
     then((res) => res.data).
     catch((err) => {
       console.log(err);
       throw err;
     });
+
+  console.log("Requesting show");
   const data = await makeRequest(baseUrl, query).
     then((res) => res.data).
     catch((err) => {
       console.log(err);
       throw err;
     });
-  for(const show of data.results) {
-    const genresName = [];
 
+  for(const show of data.results) {
+    key += 1;
+    const genresName = [];
     for(const id of show.genre_ids) {
       for(const genre of genres.genres) {
         if(id === genre.id) {
@@ -27,12 +33,14 @@ exports.getShows = async function (query) {
         }
       }
     }
-    showResults.push({
+    showsResults.push({
       genresName,
-      originalTitle: show.original_name,
+      key,
+      originalTitle: show.name,
+      overview: show.overview,
       posterPath: show.poster_path,
       releaseDate: show.first_air_date
     });
   }
-  return showResults;
+  return showsResults;
 };
