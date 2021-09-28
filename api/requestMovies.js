@@ -4,7 +4,6 @@ const genreUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${config
 const baseUrl = `https://api.themoviedb.org/3/search/movie?api_key=${config.TMDB_API}&`;
 
 exports.getMovies = async function (query) {
-  let key = 0;
   const moviesResults = [];
 
   console.log("Requesting genres");
@@ -24,7 +23,6 @@ exports.getMovies = async function (query) {
     });
 
   for(const movie of data.results) {
-    key += 1;
     const genresName = [];
     for(const id of movie.genre_ids) {
       for(const genre of genres.genres) {
@@ -35,7 +33,7 @@ exports.getMovies = async function (query) {
     }
     moviesResults.push({
       genresName,
-      key,
+      id: movie.id,
       originalTitle: movie.original_title,
       overview: movie.overview,
       posterPath: movie.poster_path,
